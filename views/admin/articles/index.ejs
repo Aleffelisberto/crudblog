@@ -1,0 +1,83 @@
+<%- include ('../../partials/header.ejs') %>
+
+  <body>
+    <%- include ('../../partials/navbar.ejs') %>
+      <div class="container">
+        <div class="p-3 my-3 d-flex justify-content-between align-items-center">
+          <h1 class="display-3">Artigos</h1>
+          <a href="/admin/articles/new" class="btn btn-lg btn-success">Criar artigo</a>
+        </div>
+        <table class="table" caption="Categorias">
+          <thead class="bg-dark text-light">
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Título</th>
+              <th scope="col">Slug</th>
+              <th scope="col">Categoria</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% articles.forEach(article=> { %>
+              <tr>
+                <th scope="row">
+                  <%= article.id %>
+                </th>
+                <td>
+                  <%= article.title %>
+                </td>
+                <td>
+                  <%= article.slug %>
+                </td>
+                <td>
+                  <%= article['category.title'] %>
+                </td>
+                <td>
+                  <div>
+                    <a href="/admin/articles/edit/<%= article.id %>" class="btn btn-sm btn-warning">Editar</a>
+                    <button id="delete-button-<%= article.id %>" class="btn btn-sm btn-danger delete-button"
+                      data-bs-toggle="modal" data-bs-target="#delete-modal">Deletar</button>
+                  </div>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deletar artigo</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Deseja realmente excluir o artigo ?
+              </div>
+              <div class="modal-footer">
+                <form method="POST" action="/articles/delete">
+                  <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-danger">Deletar</button>
+                  <input class="input-id-confirmation" type="text" name="id" hidden>
+                  <!-- Script to handle the confirmation of deletion of the article selected -->
+                  <script>
+                    const deleteButtons = document.querySelectorAll('.delete-button')
+
+                    for (const button of deleteButtons) {
+
+                      button.addEventListener('click', () => {
+                        document.querySelector('.input-id-confirmation').value = parseInt(button.id.replace('delete-button-', ''))
+                      })
+                    }
+                  </script>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+
+  <%- include ('../../partials/footer.ejs') %>

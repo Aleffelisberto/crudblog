@@ -8,3 +8,12 @@
 body {
   font-family: 'Andada Pro', serif;
 }
+
+.container #articles article {
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.container #articles article:hover {
+  transform: scale(1.05);
+}

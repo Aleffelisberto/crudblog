@@ -32,9 +32,29 @@ async function testDatabaseConnection() {
 
 // testDatabaseConnection()
 
+app.get('/', async (request, response) => {
+  try {
+    const articles = await Article.findAll({
+      raw: true,
+      include: [
+        {
+          model: Category,
+          required: true,
+          attributes: ['title']
+        }
+      ]
+    })
+
+    response.render('index', { articles: articles })
+  } catch (err) {
+    console.log('An error has occurred: ' + err.message)
+  }
+})
+
 app.use('/admin/categories', CategoriesController)
 app.use('/categories', CategoriesController)
 
+app.use('/admin/articles', ArticlesController)
 app.use('/articles', ArticlesController)
 
 // running the server on port 3000

@@ -2,7 +2,27 @@
 
   <body>
     <%- include('partials/navbar.ejs') %>
-      <h1>Bem-vindo ao blog com painel administrativo</h1>
+      <main class="container">
+        <div class="text-center my-5">
+          <h1 class="display-1 fst-italic">CRUD BLOG</h1>
+          <p class="lead">Blog aplicando os conceitos de CRUD usando javascript, nodejs, express, sequelize ORM e
+            postgres.
+          </p>
+        </div>
+        <section id="articles" class="my-5">
+          <h2>Artigos</h2>
+          <% articles.forEach(article=> { %>
+            <article class="my-3 border rounded p-4">
+              <a class="text-decoration-none fst-none link-dark fs-2 d-inline-block" href="#">
+                <%= article.title %>
+              </a>
+              <small class="fst-italic d-block">
+                Categoria: <%= article['category.title'] %>
+              </small>
+            </article>
+            <% }) %>
+        </section>
+      </main>
   </body>
 
   <%- include ('partials/footer.ejs') %>
