@@ -5,10 +5,12 @@ const connection = require('./database/database') // importing database connecti
 // importing controllers
 const CategoriesController = require('./controllers/categories/CategoriesController')
 const ArticlesController = require('./controllers/articles/ArticlesController')
+const UsersController = require('./controllers/users/UsersController')
 
 //importing models
 const Article = require('./database/models/Article')
 const Category = require('./database/models/Category')
+const User = require('./database/models/User')
 
 const app = express() // loading express
 
@@ -32,9 +34,15 @@ async function testDatabaseConnection() {
 
 // testDatabaseConnection()
 
+app.use('/', CategoriesController)
+app.use('/', ArticlesController)
+app.use('/', UsersController)
+
 app.get('/', async (request, response) => {
+  const limit = 4
+
   try {
-    const articles = await Article.findAll({
+    const articles = await Article.findAndCountAll({
       raw: true,
       include: [
         {
@@ -42,20 +50,28 @@ app.get('/', async (request, response) => {
           required: true,
           attributes: ['title']
         }
-      ]
+      ],
+      limit: limit,
+      offset: 0
     })
 
-    response.render('index', { articles: articles })
+    let hasNextPage = false
+    if (articles.count > limit) hasNextPage = true
+
+    const categories = await Category.findAll({
+      raw: true,
+      order: [['title', 'ASC']]
+    })
+
+    response.render('index', {
+      articles: articles.rows,
+      categories: categories,
+      hasNextPage: hasNextPage
+    })
   } catch (err) {
-    console.log('An error has occurred: ' + err.message)
+    console.log('/\nAn error has occurred: ' + err.message)
   }
 })
-
-app.use('/admin/categories', CategoriesController)
-app.use('/categories', CategoriesController)
-
-app.use('/admin/articles', ArticlesController)
-app.use('/articles', ArticlesController)
 
 // running the server on port 3000
 app.listen(3000, err => {

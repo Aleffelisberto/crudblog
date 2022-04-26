@@ -1,0 +1,15 @@
+<%- include ('partials/header.ejs') %>
+
+  <body>
+    <%- include ('partials/navbar-home.ejs') %>
+      <article class="container my-3">
+        <h1 class="display-3 mb-3">
+          <%= article.title %>
+        </h1>
+        <div class="article-body">
+          <%- article.body %>
+        </div>
+      </article>
+  </body>
+
+  <%- include ('partials/footer.ejs') %>

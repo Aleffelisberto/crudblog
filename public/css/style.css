@@ -9,11 +9,19 @@ body {
   font-family: 'Andada Pro', serif;
 }
 
-.container #articles article {
+article.article {
   transition: transform 0.2s;
   cursor: pointer;
 }
 
-.container #articles article:hover {
+article.article:hover {
   transform: scale(1.05);
+}
+
+.pagination-buttons a {
+  transition: transform 0.2s;
+}
+
+.pagination-buttons a:hover {
+  transform: scale(1.3);
 }

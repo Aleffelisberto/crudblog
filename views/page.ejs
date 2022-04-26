@@ -3,13 +3,6 @@
   <body>
     <%- include ('partials/navbar-home.ejs') %>
       <main class="container">
-        <div class="text-center my-5">
-          <h1 class="display-1 fst-italic">CRUD BLOG</h1>
-          <p class="lead">Blog aplicando os conceitos de CRUD usando javascript, nodejs, express, sequelize ORM e
-            postgres.
-          </p>
-        </div>
-        <hr>
         <section id="articles" class="my-5">
           <h2 class="display-5">Artigos</h2>
           <% articles.forEach(article=> { %>
@@ -23,13 +16,18 @@
             </article>
             <% }) %>
         </section>
-        <% if (hasNextPage) { %>
-          <div class="pagination-buttons d-flex justify-content-end mb-3">
-            <a href="/articles/page/2">
-              <img src="/icons/right-arrow.png" alt="icon to next page">
+        <div class="pagination-buttons d-flex justify-content-between">
+          <% if (page> 1) { %>
+            <a href="/articles/page/<%= page - 1 %>">
+              <img src="/icons/left-arrow.png" alt="icon to previous page">
             </a>
-          </div>
-          <% } %>
+            <% } %>
+              <% if (hasNextPage) { %>
+                <a href="/articles/page/<%= page + 1 %>">
+                  <img src="/icons/right-arrow.png" alt="icon to next page">
+                </a>
+                <% } %>
+        </div>
       </main>
   </body>
   <script src="/js/main.js">

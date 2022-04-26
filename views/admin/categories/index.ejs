@@ -29,9 +29,9 @@
                   <%= category.slug %>
                 </td>
                 <td>
-                  <div>
-                    <a href="/admin/categories/edit/<%= category.id %>" class="btn btn-sm btn-warning">Editar</a>
-                    <button id="delete-button-<%= category.id %>" class="btn btn-sm btn-danger delete-button"
+                  <div class="text-end">
+                    <a href="/admin/categories/edit/<%= category.id %>" class="btn btn-sm btn-warning mr-3">Editar</a>
+                    <button id="delete-button-<%= category.id %>" class="btn btn-sm btn-danger delete-button ml-3"
                       data-bs-toggle="modal" data-bs-target="#delete-modal">Deletar</button>
                   </div>
                 </td>
@@ -53,7 +53,7 @@
                 Deseja realmente excluir a categoria ?
               </div>
               <div class="modal-footer">
-                <form method="POST" action="/categories/delete">
+                <form method="POST" action="/category/delete">
                   <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancelar</button>
                   <button type="submit" class="btn btn-danger">Deletar</button>
                   <input class="input-id-confirmation" type="text" name="id" hidden>

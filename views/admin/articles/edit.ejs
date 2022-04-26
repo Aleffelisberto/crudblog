@@ -1,0 +1,57 @@
+<%- include ('../../partials/header.ejs') %>
+
+  <body>
+    <%- include ('../../partials/navbar.ejs') %>
+      <div class="container">
+        <div class="card mt-3">
+          <div class="card-header">
+            <h3>Editar artigo</h3>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="/article/update">
+              <div class="mb-3">
+                <label for="title">Título</label>
+                <input id="title" type="text" class="form-control" name="newTitle" value="<%= article.title %> ">
+              </div>
+              <div class="mb-3">
+                <label for="select-category">Categoria</label>
+                <select id="select-category" class="form-select" name="categoryId" id="input-select">
+                  <% categories.forEach(category=> { %>
+                    <% if (article.categoryId===category.id) { %>
+                      <option selected value="<%= category.id %>">
+                        <%= category.title %>
+                      </option>
+                      <% } else { %>
+                        <option value="<%= category.id %>">
+                          <%= category.title %>
+                        </option>
+                        <% } %>
+                          <% }) %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <textarea name="body" id="body-article" class="form-control" cols="30" rows="10">
+                  <%- article.body %> 
+                </textarea>
+              </div>
+              <input type="number" name="id" value="<%= article.id %>" hidden>
+              <div>
+                <input type="submit" value="Atualizar artigo" class="btn btn-success">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </body>
+  <script src="/tinymce/tinymce.min.js"></script>
+  <script>
+    tinymce.init({
+      language: 'pt_BR',
+      selector: '#body-article',
+      plugins: [
+        'advlist autolink link lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons'
+      ]
+    })
+  </script>
+
+  <%- include ('../../partials/footer.ejs') %>

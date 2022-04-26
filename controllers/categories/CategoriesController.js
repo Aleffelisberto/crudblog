@@ -1,27 +1,56 @@
 const express = require('express')
 const slufigy = require('slugify')
 const Category = require('../../database/models/Category')
+const Article = require('../../database/models/Article')
 
 const router = express.Router()
 
-router.get('/new', async (request, response) => {
+router.get('/admin/categories/new', async (request, response) => {
   response.render('admin/categories/new')
 })
 
-router.get('/', async (request, response) => {
+router.get('/admin/categories', async (request, response) => {
   try {
     const categories = await Category.findAll({
       raw: true,
       order: [['id', 'ASC']]
     })
 
-    response.render('admin/categories/index', { categories: categories })
+    response.render('/admin/categories/new\nadmin/categories/index', {
+      categories: categories
+    })
   } catch (error) {
     console.log(error.message)
   }
 })
 
-router.get('/edit/:id', async (request, response) => {
+router.get('/category/:slug', async (request, response) => {
+  const { slug } = request.params
+
+  if (slug) {
+    try {
+      const categories = await Category.findAll({
+        raw: true,
+        order: [['id', 'ASC']]
+      })
+      const categoryInstance = await Category.findOne({
+        where: {
+          slug: slug
+        },
+        include: { model: Article, required: true }
+      })
+      console.log(categoryInstance.articles)
+      response.render('category', {
+        categories: categories,
+        category: categoryInstance
+      })
+    } catch (err) {
+      console.log('/category/:slug\nAn error has occurred: ' + err.message)
+    }
+  }
+})
+
+router.get('/admin/categories/edit/:id', async (request, response) => {
   const { id } = request.params
 
   if (id && !isNaN(id)) {
@@ -29,14 +58,16 @@ router.get('/edit/:id', async (request, response) => {
       const categoryInstance = await Category.findByPk(id)
       response.render('admin/categories/edit', { category: categoryInstance })
     } catch (err) {
-      console.log('An error has occurred: ' + err.message)
+      console.log(
+        '/admin/categories/edit/:id\nAn error has occurred: ' + err.message
+      )
     }
   } else {
     response.redirect('/admin/categories')
   }
 })
 
-router.post('/save', async (request, response) => {
+router.post('/category/save', async (request, response) => {
   const { title } = request.body
 
   if (title) {
@@ -53,14 +84,14 @@ router.post('/save', async (request, response) => {
       })
       response.redirect('/admin/categories')
     } catch (error) {
-      console.log('An error has occurred: ' + error.message)
+      console.log('/category/save\nAn error has occurred: ' + error.message)
     }
   } else {
     response.redirect('admin/categories/new')
   }
 })
 
-router.post('/delete', async (request, response) => {
+router.post('/category/delete', async (request, response) => {
   const { id } = request.body
 
   if (id && !isNaN(id)) {
@@ -68,14 +99,14 @@ router.post('/delete', async (request, response) => {
       await Category.destroy({ where: { id: id } })
       response.redirect('/admin/categories')
     } catch (error) {
-      console.log('An error has occurred: ' + error.message)
+      console.log('/category/delete\nAn error has occurred: ' + error.message)
     }
   } else {
     response.redirect('/')
   }
 })
 
-router.post('/update', async (request, response) => {
+router.post('/category/update', async (request, response) => {
   const { id, newTitle } = request.body
 
   if (id && !isNaN(id)) {
@@ -96,7 +127,7 @@ router.post('/update', async (request, response) => {
 
       response.redirect('/admin/categories')
     } catch (err) {
-      console.log('An error has occurred: ' + err.message)
+      console.log('/category/update\nAn error has occurred: ' + err.message)
     }
   } else {
     response.redirect('/admin/categories')

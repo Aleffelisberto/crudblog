@@ -8,8 +8,8 @@ const Article = connection.define('articles', {
   body: { type: Sequelize.TEXT, allowNull: false }
 })
 
-// relationships
-Category.hasMany(Article) // One-to-many relationship
-Article.belongsTo(Category) // One-to-one relationship
+// associations
+Category.hasMany(Article, { onDelete: 'cascade' }) // One-to-many association
+Article.belongsTo(Category) // One-to-one associoation
 
 module.exports = Article

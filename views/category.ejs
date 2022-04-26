@@ -1,0 +1,22 @@
+<%- include ('partials/header.ejs') %>
+
+  <body>
+    <%- include ('partials/navbar-home.ejs') %>
+      <main class="container my-3">
+        <h1 class="display-2">
+          <%= category.title %>
+        </h1>
+        <hr>
+        <section id="articles" class="my-5">
+          <% category.articles.forEach(article=> { %>
+            <article id="article-<%= article.id %>" class="article my-3 border rounded p-4">
+              <h2 class="text-decoration-none fst-none link-dark fs-2" href="#">
+                <%= article.title %>
+              </h2>
+            </article>
+            <% }) %>
+        </section>
+      </main>
+  </body>
+  <script src="/js/main.js"></script>
+  <%- include ('partials/footer.ejs') %>
