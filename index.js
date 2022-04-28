@@ -1,6 +1,7 @@
 const express = require('express') // importing express
 const bodyParser = require('body-parser') // importing body-parser
 const connection = require('./database/database') // importing database connection
+const session = require('express-session') // importing express session
 
 // importing controllers
 const CategoriesController = require('./controllers/categories/CategoriesController')
@@ -15,6 +16,16 @@ const User = require('./database/models/User')
 const app = express() // loading express
 
 app.use(express.static('public')) // setting the static files folder
+
+// setting sessions
+app.use(
+  session({
+    secret: '439D312d3$@#d4@2d2',
+    cookie: {
+      maxAge: 3000000 // 30seconds (just testing)
+    }
+  })
+)
 
 app.set('view engine', 'ejs') // setting ejs as view engine
 
