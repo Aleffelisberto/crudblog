@@ -2,21 +2,22 @@ const express = require('express')
 const slufigy = require('slugify')
 const Category = require('../../database/models/Category')
 const Article = require('../../database/models/Article')
+const adminAuth = require('../../middlewares/adminAuth')
 
 const router = express.Router()
 
-router.get('/admin/categories/new', async (request, response) => {
+router.get('/admin/categories/new', adminAuth, async (request, response) => {
   response.render('admin/categories/new')
 })
 
-router.get('/admin/categories', async (request, response) => {
+router.get('/admin/categories', adminAuth, async (request, response) => {
   try {
     const categories = await Category.findAll({
       raw: true,
       order: [['id', 'ASC']]
     })
 
-    response.render('/admin/categories/new\nadmin/categories/index', {
+    response.render('admin/categories/index', {
       categories: categories
     })
   } catch (error) {
@@ -50,24 +51,28 @@ router.get('/category/:slug', async (request, response) => {
   }
 })
 
-router.get('/admin/categories/edit/:id', async (request, response) => {
-  const { id } = request.params
+router.get(
+  '/admin/categories/edit/:id',
+  adminAuth,
+  async (request, response) => {
+    const { id } = request.params
 
-  if (id && !isNaN(id)) {
-    try {
-      const categoryInstance = await Category.findByPk(id)
-      response.render('admin/categories/edit', { category: categoryInstance })
-    } catch (err) {
-      console.log(
-        '/admin/categories/edit/:id\nAn error has occurred: ' + err.message
-      )
+    if (id && !isNaN(id)) {
+      try {
+        const categoryInstance = await Category.findByPk(id)
+        response.render('admin/categories/edit', { category: categoryInstance })
+      } catch (err) {
+        console.log(
+          '/admin/categories/edit/:id\nAn error has occurred: ' + err.message
+        )
+      }
+    } else {
+      response.redirect('/admin/categories')
     }
-  } else {
-    response.redirect('/admin/categories')
   }
-})
+)
 
-router.post('/category/save', async (request, response) => {
+router.post('/category/save', adminAuth, async (request, response) => {
   const { title } = request.body
 
   if (title) {
@@ -91,7 +96,7 @@ router.post('/category/save', async (request, response) => {
   }
 })
 
-router.post('/category/delete', async (request, response) => {
+router.post('/category/delete', adminAuth, async (request, response) => {
   const { id } = request.body
 
   if (id && !isNaN(id)) {
@@ -106,7 +111,7 @@ router.post('/category/delete', async (request, response) => {
   }
 })
 
-router.post('/category/update', async (request, response) => {
+router.post('/category/update', adminAuth, async (request, response) => {
   const { id, newTitle } = request.body
 
   if (id && !isNaN(id)) {
