@@ -1,0 +1,79 @@
+<%- include ('../../partials/header.ejs') %>
+
+  <body>
+    <%- include ('../../partials/navbar.ejs') %>
+      <div class="container">
+        <div class="p-3 my-3 d-flex justify-content-between align-items-center">
+          <h1 class="display-3">Usuários</h1>
+          <a href="/admin/users/new" class="btn btn-lg btn-success">Cadastrar usuário</a>
+        </div>
+        <table class="table" caption="Categorias">
+          <thead class="bg-dark text-light">
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">nome</th>
+              <th scope="col">email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(user=> { %>
+              <tr>
+                <th scope="row">
+                  <%= user.id %>
+                </th>
+                <td>
+                  <%= user.name %>
+                </td>
+                <td>
+                  <%= user.email %>
+                </td>
+                <td>
+                  <div class="text-end">
+                    <a href="/admin/users/edit/<%= user.id %>" class="btn btn-sm btn-warning mr-3">Editar</a>
+                    <button id="delete-button-<%= user.id %>" class="btn btn-sm btn-danger delete-button ml-3"
+                      data-bs-toggle="modal" data-bs-target="#delete-modal">Deletar</button>
+                  </div>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deletar usuário</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Deseja realmente excluir o usuário ?
+              </div>
+              <div class="modal-footer">
+                <form method="POST" action="/category/delete">
+                  <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-danger">Deletar</button>
+                  <input class="input-id-confirmation" type="text" name="id" hidden>
+                  <!-- Script to handle the confirmation of deletion of the category selected -->
+                  <script>
+                    const deleteButtons = document.querySelectorAll('.delete-button')
+                    let categoryId = undefined
+
+                    for (const button of deleteButtons) {
+
+                      button.addEventListener('click', () => {
+                        document.querySelector('.input-id-confirmation').value = parseInt(button.id.replace('delete-button-', ''))
+                      })
+                    }
+                  </script>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+
+  <%- include ('../../partials/footer.ejs') %>
