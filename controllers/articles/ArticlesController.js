@@ -3,6 +3,7 @@ const slugify = require('slugify')
 const router = express.Router()
 const Article = require('../../database/models/Article')
 const Category = require('../../database/models/Category')
+const adminAuth = require('../../middlewares/adminAuth')
 
 router.get('/article/:id', async (request, response) => {
   const { id } = request.params
@@ -24,7 +25,7 @@ router.get('/article/:id', async (request, response) => {
   }
 })
 
-router.get('/admin/articles/new', async (request, response) => {
+router.get('/admin/articles/new', adminAuth, async (request, response) => {
   try {
     const categories = await Category.findAll({
       raw: true,
@@ -38,7 +39,7 @@ router.get('/admin/articles/new', async (request, response) => {
   }
 })
 
-router.get('/admin/articles', async (request, response) => {
+router.get('/admin/articles', adminAuth, async (request, response) => {
   console.log('vim aqui')
 
   try {
@@ -62,7 +63,7 @@ router.get('/admin/articles', async (request, response) => {
   }
 })
 
-router.get('/admin/articles/edit/:id', async (request, response) => {
+router.get('/admin/articles/edit/:id', adminAuth, async (request, response) => {
   const { id } = request.params
 
   if (id && !isNaN(id)) {
@@ -138,7 +139,7 @@ router.get('/articles/page/:num', async (request, response) => {
   }
 })
 
-router.post('/article/save', async (request, response) => {
+router.post('/article/save', adminAuth, async (request, response) => {
   const { title, body, category } = request.body
 
   try {
@@ -159,7 +160,7 @@ router.post('/article/save', async (request, response) => {
   }
 })
 
-router.post('/article/update', async (request, response) => {
+router.post('/article/update', adminAuth, async (request, response) => {
   const { id, newTitle, body, categoryId } = request.body
 
   try {
@@ -187,7 +188,7 @@ router.post('/article/update', async (request, response) => {
   }
 })
 
-router.post('/article/delete', async (request, response) => {
+router.post('/article/delete', adminAuth, async (request, response) => {
   const { id } = request.body
 
   if (id && !isNaN(id)) {
